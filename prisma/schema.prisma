@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id             String   @id @default(uuid())
+  title          String?
+  authors        String?
+  isbn           String?
+  description    String?
+  genres         String?
+  price_cents    Int?
+  currency       String?
+  stock          Int?
+  images         String?
+  publisher      String?
+  published_date DateTime?
+  language       String?
+  weight_grams   Int?
+  dimensions_cm  String?
+  rating_avg     Float?
+  review_count   Int?
+  seo_meta       String?
+}
+
+model User {
+  id                 String   @id @default(uuid())
+  full_name          String?
+  email              String?  @unique
+  password_hash      String?
+  role               String?  @default("customer")
+  shipping_addresses String?
+  billing_addresses  String?
+  preferences        String?
+  created_at         DateTime? @default(now())
+  last_login         DateTime?
+}
+
+model Cart {
+  id          String   @id @default(uuid())
+  user_id     String?
+  items       String?
+  total_cents Int?
+  currency    String?
+  updated_at  DateTime? @updatedAt
+}
+
+model Order {
+  id                String   @id @default(uuid())
+  user_id           String?
+  items             String?
+  total_cents       Int?
+  currency          String?
+  shipping_address  String?
+  billing_address   String?
+  status            String?
+  payment_status    String?
+  stripe_payment_id String?
+  tracking_number   String?
+  created_at        DateTime? @default(now())
+  shipped_at        DateTime?
+  delivered_at      DateTime?
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  user_id       String?
+  book_id       String?
+  rating        Int?
+  title         String?
+  body          String?
+  created_at    DateTime? @default(now())
+  helpful_count Int?     @default(0)
+  is_moderated  Boolean? @default(false)
+}
+
+model Inventory {
+  book_id           String @id
+  sku               String?
+  stock_level       Int?
+  reorder_threshold Int?
+}
+
+model Recommendation {
+  id         String   @id @default(uuid())
+  user_id    String?
+  book_ids   String?
+  algorithm  String?
+  created_at DateTime? @default(now())
+}
+
+model Template {
+  id            String  @id @default(uuid())
+  name          String?
+  html          String?
+  css           String?
+  preview_image String?
+  rating_avg    Float?
+  is_active     Boolean? @default(false)
+}
+
+model AnalyticsMetric {
+  id     String   @id @default(uuid())
+  date   DateTime?
+  metric String?
+  value  Float?
+}
